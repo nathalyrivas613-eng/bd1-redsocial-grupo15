@@ -1,9 +1,7 @@
  Red Social Estudiantil Pascualina
 
  Integrantes
-
-- Jose David Celis
-- Mariana Diaz Lastre
+ 
 - Nathaly Rivas
 
 Descripción del proyecto
