@@ -1,7 +1,8 @@
 -- ============================================================
 -- RED SOCIAL ESTUDIANTIL PASCUALINA (MySQL)
+-- Estudiante: Nathaly Rivas Aristizabal
 -- Asignatura: Bases de Datos I (G100)
--- Script DDL de Implementación Física del Modelo
+-- Script DDL de Implementación de la estructura completa de una base de datos
 -- ============================================================
 
 -- 1. Creación y selección de la base de datos
