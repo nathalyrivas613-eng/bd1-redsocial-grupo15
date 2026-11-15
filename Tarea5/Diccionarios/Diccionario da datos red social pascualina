@@ -1,0 +1,360 @@
+ Diccionario de datos
+Para documentar mi base de datos de manera profesional, yo construí el diccionario de datos de las 15 tablas describiendo cada columna, su tipo de dato, sus restricciones y 
+la función exacta que pensé para cada atributo dentro de la plataforma:
+
+Estudiante
+Yo diseñé esta tabla para almacenar únicamente las credenciales institucionales de acceso de cada usuario registrado.
+Campo
+Tipo de Dato
+Restricciones
+Descripción
+id_estudiante
+INT
+PK, AI, NN
+Identificador único autoincremental del estudiante.
+correo_institucional
+VARCHAR(100)
+NN, UQ
+Correo electrónico institucional único (@pascualbravo.edu.co).
+password_hash
+VARCHAR(255)
+NN
+Contraseña cifrada mediante algoritmo de hash.
+fecha_registro
+TIMESTAMP
+DEFAULT
+Fecha y hora exacta en que se creó la cuenta.
+
+
+Perfil
+Yo creé esta entidad en relación 1:1 con estudiante para guardar la información académica y las preferencias personales.
+Campo
+Tipo de Dato
+Restricciones
+Descripción
+id_perfil
+INT
+PK, AI, NN
+Identificador único del perfil académico.
+id_estudiante
+INT
+FK, NN, UQ
+Referencia única al estudiante propietario (estudiante.id_estudiante).
+nombre_completo
+VARCHAR(150)
+NN
+Nombres y apellidos completos del estudiante.
+carrera
+VARCHAR(100)
+NN
+Programa académico que cursa en la institución.
+semestre
+INT
+CHECK (> 0)
+Nivel o semestre académico actual del estudiante.
+preferencias_intereses
+JSON
+NULL
+Objeto JSON donde guardo preferencias de estudio (modalidad, turno).
+
+
+Interes
+Pensé esta tabla como un catálogo maestro de temáticas académicas y tecnológicas para evitar que cada usuario escriba textos libres distintos.
+Campo
+Tipo de Dato
+Restricciones
+Descripción
+id_interes
+INT
+PK, AI, NN
+Identificador único del área de interés.
+nombre_interes
+VARCHAR(100)
+NN
+Título del interés (ej. Programación Competitiva, IA).
+descripcion
+TEXT
+NULL
+Detalle del alcance de la temática.
+
+
+Habilidad
+Al igual que con los intereses, yo diseñé este catálogo para estandarizar las competencias técnicas que los estudiantes pueden acreditar.
+Campo
+Tipo de Dato
+Restricciones
+Descripción
+id_habilidad
+INT
+PK, AI, NN
+Identificador único de la habilidad.
+nombre_habilidad
+VARCHAR(100)
+NN
+Nombre de la competencia o herramienta (ej. SQL, Python).
+categoria
+VARCHAR(50)
+NULL
+Área de clasificación (Datos, Programación, DevOps, etc.).
+
+
+Publicacion
+Aquí yo modelo el muro principal de la red social, restringiendo con un CHECK las categorías válidas de contenido.
+Campo
+Tipo de Dato
+Restricciones
+Descripción
+id_publicacion
+INT
+PK, AI, NN
+Identificador único de la publicación.
+id_estudiante
+INT
+FK, NN
+Autor de la publicación (estudiante.id_estudiante).
+contenido
+TEXT
+NN
+Cuerpo textual del mensaje o recurso compartido.
+tipo_publicacion
+VARCHAR(30)
+CHECK
+Categoría válida: 'Pregunta', 'Recurso', 'Noticia' o 'Meme'.
+fecha_creacion
+TIMESTAMP
+DEFAULT
+Marca de tiempo de creación del aporte.
+
+
+Comentario
+Yo implementé esta tabla para registrar las respuestas e hilos de conversación dentro de cada publicación.
+Campo
+Tipo de Dato
+Restricciones
+Descripción
+id_comentario
+INT
+PK, AI, NN
+Identificador único del comentario.
+id_publicacion
+INT
+FK, NN
+Publicación comentada (publicacion.id_publicacion).
+id_estudiante
+INT
+FK, NN
+Estudiante que redacta el comentario (estudiante.id_estudiante).
+contenido
+TEXT
+NN
+Texto del comentario publicado.
+fecha_creacion
+TIMESTAMP
+DEFAULT
+Fecha y hora de emisión del comentario.
+
+
+Reaccion
+Diseñé esta entidad para capturar las valoraciones rápidas de los estudiantes hacia los aportes de sus compañeros.
+Campo
+Tipo de Dato
+Restricciones
+Descripción
+id_reaccion
+INT
+PK, AI, NN
+Identificador único de la reacción.
+id_publicacion
+INT
+FK, NN
+Publicación valorada (publicacion.id_publicacion).
+id_estudiante
+INT
+FK, NN
+Estudiante que reacciona (estudiante.id_estudiante).
+tipo_reaccion
+VARCHAR(20)
+NULL
+Tipo de valoración (ej. 'Util', 'Me gusta', 'Interesante').
+
+
+Grupo
+Yo creé esta tabla para representar los semilleros de investigación, equipos de hackatón y clubes estudiantiles.
+Campo
+Tipo de Dato
+Restricciones
+Descripción
+id_grupo
+INT
+PK, AI, NN
+Identificador único del grupo o comunidad.
+nombre
+VARCHAR(100)
+NN
+Denominación oficial del grupo o semillero.
+descripcion
+TEXT
+NULL
+Objetivos y actividades principales de la comunidad.
+tipo
+VARCHAR(30)
+NULL
+Clasificación de la comunidad ('Estudio', 'Hackaton', 'Club').
+
+
+Evento
+Pensé esta tabla para gestionar talleres y maratones, dejando id_grupo opcional (NULL) por si un evento lo organiza directamente la institución.
+Campo
+Tipo de Dato
+Restricciones
+Descripción
+id_evento
+INT
+PK, AI, NN
+Identificador único del evento.
+id_grupo
+INT
+FK, NULL
+Grupo organizador (grupo.id_grupo); nulo si es institucional.
+titulo
+VARCHAR(150)
+NN
+Nombre del evento académico o cultural.
+fecha_inicio
+DATETIME
+NN
+Fecha y hora programada para el inicio del evento.
+ubicacion_geo
+JSON
+NULL
+Estructura JSON donde guardo datos de bloque, aula o enlace virtual.
+
+
+Mentoria
+Yo diseñé esta entidad con doble clave foránea hacia estudiante para diferenciar quién actúa como mentor y quién solicita la asesoría.
+Campo
+Tipo de Dato
+Restricciones
+Descripción
+id_mentoria
+INT
+PK, AI, NN
+Identificador único de la sesión de mentoría.
+id_mentor
+INT
+FK, NN
+Estudiante que brinda la asesoría (estudiante.id_estudiante).
+id_estudiante
+INT
+FK, NN
+Estudiante que recibe la asesoría (estudiante.id_estudiante).
+materia_tema
+VARCHAR(100)
+NN
+Asignatura o temática específica de la mentoría.
+estado
+VARCHAR(20)
+NULL
+Estado del proceso ('Pendiente', 'Aceptada', 'Finalizada').
+
+
+Seguimiento
+Implementé esta tabla como una relación recursiva sobre estudiante para modelar quién sigue a quién dentro de la red.
+Campo
+Tipo de Dato
+Restricciones
+Descripción
+id_seguimiento
+INT
+PK, AI, NN
+Identificador único del vínculo de seguimiento.
+id_seguidor
+INT
+FK, NN
+Estudiante que sigue a otro usuario (estudiante.id_estudiante).
+id_seguido
+INT
+FK, NN
+Estudiante que recibe el seguimiento (estudiante.id_estudiante).
+fecha_seguimiento
+TIMESTAMP
+DEFAULT
+Fecha y hora en que se estableció la conexión.
+
+
+Estudiante_interes
+Tabla asociativa (N:M) que yo creé para vincular a cada estudiante con sus múltiples áreas de interés.
+Campo
+Tipo de Dato
+Restricciones
+Descripción
+id_estudiante
+INT
+PK, FK, NN
+Referencia al estudiante (estudiante.id_estudiante).
+id_interes
+INT
+PK, FK, NN
+Referencia al interés seleccionado (interes.id_interes).
+
+
+Estudiante_habilidad
+Tabla asociativa (N:M) en la que yo decidí agregar el atributo nivel para medir qué tanto domina cada estudiante una herramienta.
+Campo
+Tipo de Dato
+Restricciones
+Descripción
+id_estudiante
+INT
+PK, FK, NN
+Referencia al estudiante (estudiante.id_estudiante).
+id_habilidad
+INT
+PK, FK, NN
+Referencia a la habilidad (habilidad.id_habilidad).
+nivel
+VARCHAR(30)
+DEFAULT
+Nivel de competencia ('Básico', 'Intermedio', 'Avanzado').
+
+
+Miembro_grupo
+Tabla asociativa (N:M) donde yo registro la pertenencia de los estudiantes a las comunidades y su rol específico (Líder, Mentor o Miembro).
+Campo
+Tipo de Dato
+Restricciones
+Descripción
+id_grupo
+INT
+PK, FK, NN
+Referencia al grupo (grupo.id_grupo).
+id_estudiante
+INT
+PK, FK, NN
+Referencia al estudiante integrante (estudiante.id_estudiante).
+rol_grupo
+VARCHAR(30)
+DEFAULT
+Rol desempeñado ('Líder', 'Mentor', 'Miembro').
+
+
+Asistente_evento
+Tabla asociativa (N:M) que yo implementé para controlar la inscripción y confirmación de asistencia a cada evento.
+Campo
+Tipo de Dato
+Restricciones
+Descripción
+id_evento
+INT
+PK, FK, NN
+Referencia al evento (evento.id_evento).
+id_estudiante
+INT
+PK, FK, NN
+Referencia al estudiante inscrito (estudiante.id_estudiante).
+estado_asistencia
+VARCHAR(20)
+DEFAULT
+Estado de participación ('Confirmado', 'Pendiente').
+
+
