@@ -99,7 +99,7 @@ Para evitar recorridos secuenciales completos (*Sequential Scans*) sobre grandes
 
 ## 3. Diccionario de Consultas Analíticas (DML)
 
-Inventario completo de las consultas SQL diseñadas para extraer *insights* combinando tablas relacionales (`JOIN`), funciones de agregación (`SUM`, `COUNT`, `AVG`, `GROUP BY`) y operadores JSONB (`->>`, `@>`)[cite: 5, 6]:
+Inventario completo de las consultas SQL diseñadas para extraer *insights* combinando tablas relacionales (`JOIN`), funciones de agregación (`SUM`, `COUNT`, `AVG`, `GROUP BY`) y operadores JSONB (`->>`, `@>`):
 
 | # | Consulta Analítica | Tablas Cruzadas (`JOIN`) | Operadores y Funciones SQL/JSONB | Insight / Resultado Obtenido |
 |---|---|---|---|---|
